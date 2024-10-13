@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Optional CSS -->
+</head>
+<body>
+    <h1>Login</h1> <!-- Changed title to Login -->
+    <form id="Login-Form"> <!-- Ensure the form ID matches -->
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+
+        <button type="submit">Login</button> <!-- Consistent button text case -->
+    </form>
+
+    <script>
+        // Correctly reference the form ID here
+        document.getElementById('Login-Form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('http://localhost:5000/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password }),
+                });
+
+
+                // Check if the response is successful
+                if (response.ok) {
+                    const data = await response.json();
+                    // Redirect to the forum page with user ID if needed
+                    window.location.href = `/forum?userId=${data.userId}`; // Use the userId from the response if returned
+                } else {
+                    const errorData = await response.json();
+                    alert(errorData.error); // Show error message
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('There was an error processing your request.'); // General error alert
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!-- forum.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forum</title>
+</head>
+<body>
+    <h1>Forum</h1>
+    <div id="forum-container"></div>
+
+    <h2>Create a Forum</h2>
+    <input type="text" id="forum-title" placeholder="Forum Title">
+    <button onclick="createForum()">Create Forum</button>
+    
+    <script>
+        // Get userId from URL query parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const userId = urlParams.get('userId');
+    
+        async function fetchForums() {
+            const response = await fetch('/forums');
+            const forums = await response.json();
+    
+            const forumContainer = document.getElementById('forum-container');
+            forumContainer.innerHTML = '';
+            forums.forEach(forum => {
+                const forumDiv = document.createElement('div');
+                forumDiv.innerHTML = `<h3>${forum.title}</h3>`;
+                forumContainer.appendChild(forumDiv);
+            });
+        }
+    
+        async function createForum() {
+            const title = document.getElementById('forum-title').value;
+            await fetch('/forums', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title, userId }) // Include userId when creating a forum
+            });
+            fetchForums(); // Refresh the forum list
+        }
+    
+        // Initial fetch to load forums
+        fetchForums();
+    </script>
+</body>
+</html>
