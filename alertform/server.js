@@ -146,11 +146,20 @@ app.get('/forums', async (req, res) => {
 });
 
 app.get('/forums/info', async (req, res) => {
-    const forum  = await Forum.findById(req.query.id);
+    const forumId = req.query.id; // Get the forum ID from the query parameters
+    const forum = await Forum.findById(forumId);
+    
+    // Check if forum was found
+    if (!forum) {
+        return res.status(404).json({ error: 'Forum not found' });
+    }
+
+    // Process messages and fetch usernames
     for (const message of forum.messages) {
         const user = await User2.findById(message.user);
-        message.username = user?.username ?? null;
+        message.username = user?.username ?? null; // Assign username if found
     }
+    
     res.status(200).json(forum);
 });
 app.get('/home', (req, res) => {
