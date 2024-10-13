@@ -107,6 +107,11 @@ const forumSchema = new mongoose.Schema({
 
 const Forum = mongoose.model('Forum', forumSchema);
 
+app.get('/styles.css', (req, res) => {
+    res.sendFile(path.resolve('../loginsignup/styles.css'));
+});
+
+app.use('/public/', express.static(path.resolve("../public")));
 
 
 app.get('/forum', (req, res) => {

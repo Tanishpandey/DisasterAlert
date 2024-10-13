@@ -4,15 +4,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css"> <!-- Optional CSS -->
     <title>Forum</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1>Forum</h1>
+    <h1>Forums</h1>
     <div id="forum-container"></div>
 
     <h2>Create a Forum</h2>
-    <input type="text" id="forum-title" placeholder="Forum Title">
-    <button onclick="createForum()">Create Forum</button>
+    <div class="create-forum-form">
+        <input type="text" id="forum-title" placeholder="Forum Title">
+        <button onclick="createForum()">Create Forum</button>
+    </div>
     
     <script>
         // Get userId from URL query parameters
@@ -27,7 +33,7 @@
             forumContainer.innerHTML = '';
             forums.forEach(forum => {
                 const forumDiv = document.createElement('div');
-                forumDiv.innerHTML = `<h3>${forum.title}</h3>`;
+                forumDiv.innerHTML = `<h3>${forum.title}</h3><hr /><div>Created by ${forum.creator}</div><hr /><div>${forum.messages.length} messages</div>`;
                 forumContainer.appendChild(forumDiv);
             });
         }
