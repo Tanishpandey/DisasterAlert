@@ -5,24 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tailored Alert Form</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+        * {
+            box-sizing: border-box;
         }
+
+        body {
+            margin: 0;
+            width: 100vw;
+            padding: 2em;
+            height: 100vh;
+            background: radial-gradient(circle at center, #649993af, #8f5c9eaf), 
+                        url("/public/wave-background.avif"), 
+                        linear-gradient(#649993, #649993);
+            background-size: fit;
+            background-position: center;
+            color: #fff;
+            font-family: "Roboto Slab", Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1em;
+        }
+
+        h1 {
+            margin-bottom: 1em;
+        }
+
         form {
             display: flex;
             flex-direction: column;
             max-width: 400px;
+            width: 100%;
+            padding: 2em;
+            background-color: #020b0d7f;
+            border-radius: 8px;
+            box-shadow: 0 0 8px #fff;
         }
+
         label {
             margin: 10px 0 5px;
+            color: #ffffffaf;
         }
+
         input, select {
             padding: 10px;
             margin-bottom: 15px;
-            border: 1px solid #ccc;
+            border: none;
+            background: #020b0d7f;
+            box-shadow: 0 4px 16px inset #0a1c347f;
             border-radius: 5px;
+            color: #fff;
+            font-family: inherit;
+            font-size: 1em;
         }
+
         button {
             padding: 10px;
             background-color: #28a745;
@@ -30,9 +67,43 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            transition: background 0.2s ease-in-out;
         }
+
         button:hover {
             background-color: #218838;
+        }
+
+        button:active {
+            background-color: #1e7e34;
+            color: #000;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* Hover and focus effects for inputs */
+        input:focus, select:focus {
+            box-shadow: 0 0 8px #fff;
+        }
+
+        /* Link styling */
+        a[href] {
+            color: #ffffffaf;
+            text-decoration: none;
+            font-size: 1.2em;
+            margin-top: 1em;
+            transition: color 0.2s ease-in-out;
+        }
+
+        a[href]:hover {
+            color: #fff;
+        }
+
+        a[href]:active {
+            opacity: 0.5;
         }
     </style>
 </head>
@@ -43,6 +114,7 @@
 <form id="alertForm">
     <label for="name">Name:</label>
     <input type="text" id="name" name="name" placeholder="Enter your name" required>
+
     <label for="houseType">House Type:</label>
     <select id="houseType" name="houseType" required>
         <option value="" disabled selected>Select your house type</option>
@@ -86,6 +158,7 @@
     <button type="submit">Submit</button>
 </form>
 
+
 <script>
     document.getElementById('alertForm').addEventListener('submit', async function(event) {
         event.preventDefault(); // Prevent the default form submission
@@ -94,7 +167,7 @@
         const formData = new FormData(this);
 
         // Split data into variables
-        const name = formData.get('name')
+        const name = formData.get('name');
         const houseType = formData.get('houseType');
         const address = formData.get('address');
         const demographic = formData.get('demographic');
@@ -104,7 +177,7 @@
         const alertTime = parseFloat(document.getElementById('alertTime').value, 10); // Converts to integer
 
         // Log individual variables
-        console.log('Name:',name)
+        console.log('Name:', name);
         console.log('House Type:', houseType);
         console.log('Address:', address);
         console.log('Demographic:', demographic);
@@ -120,10 +193,10 @@
             alertFrequency,
             alertTime
         };
-
+        
         try {
             // Send data to your backend/server
-            const response = await fetch('http://localhost:5000', {
+            const response = await fetch('http://localhost:5000/alert', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

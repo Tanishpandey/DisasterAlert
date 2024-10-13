@@ -53,7 +53,7 @@
                 if (response.ok) {
                     const data = await response.json();
                     // Redirect to the forum page with the new user's ID
-                    window.location.href = `/forum?userId=${data.userId}`; // Redirect after successful registration
+                    window.location.href = `/home?userId=${data.userId}`; // Redirect after successful registration
                 } else {
                     const errorData = await response.json();
                     alert(errorData.error); // Show error message

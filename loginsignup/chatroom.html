@@ -1,0 +1,81 @@
+<!-- forum.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles.css"> <!-- Optional CSS -->
+    <title>Forum</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <h1></h1>
+    
+    <!-- Container for displaying messages -->
+    <div id="messages-container"></div>
+    
+    <h2>Post a Message</h2>
+    <textarea id="message-content" placeholder="Write your message here"></textarea>
+    <button onclick="postMessage()">Send</button>
+    
+    <script>
+        // Get userId from URL query parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const userId = urlParams.get('userId');
+
+        async function fetchForum() {
+            const forumId = location.href.split("/").filter(x => x.length > 0).at(-1).split("?")[0];
+            console.log(forumId);
+            const response = await fetch(`/forums/info?id=${forumId}`);
+            const forum = await response.json();
+    
+            // Set the forum title
+            document.querySelector("h1").textContent = `Forum: ${forum.title}`;
+    
+            // Get the message container
+            const messagesContainer = document.getElementById('messages-container');
+            messagesContainer.innerHTML = ''; // Clear previous messages
+            
+            // Loop through each message and create message boxes
+            forum.messages.forEach(message => {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('message-box'); // Optional: Add a CSS class for styling
+                
+                // Populate the message box with user, content, and timestamp
+                messageDiv.innerHTML = `
+                    <strong>${message.username}</strong>: ${message.content} <br />
+                    <small>${new Date(message.timestamp).toLocaleString()}</small>
+                `;
+                
+                // Append the message to the container
+                messagesContainer.appendChild(messageDiv);
+            });
+        }
+
+        // Function to post a new message
+        async function postMessage() {
+            const forumId = location.href.split("/").filter(x => x.length > 0).at(-1).split("?")[0];
+            //const forumId = location.href.split("/").filter(x => x.length > 0).at(-1);
+            const content = document.getElementById('message-content').value;
+            
+            // Post the new message to the server
+            await fetch(`/forums/${forumId}/messages`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId, content })
+            });
+
+            // Clear the input field
+            document.getElementById('message-content').value = '';
+
+            // Reload messages after posting
+            fetchForum();
+        }
+    
+        // Initial fetch to load forum data and messages
+        fetchForum();
+    </script>
+</body>
+</html>

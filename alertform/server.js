@@ -71,9 +71,6 @@ app.post('/login', async (req, res) => {
         return res.status(400).json({ error: 'Invalid credentials' });
     }
 
-    // Redirect to the forum page after successful login
-    // You can pass the user ID if needed
-    // res.redirect(`/forum?userId=${user._id}`);
     return res.status(200).json({userId: user._id});
 });
 app.get('/login', (req, res) => {
@@ -83,21 +80,29 @@ app.get('/login', (req, res) => {
 app.post('/forums', async (req, res) => {
     const { title, userId } = req.body;
 
-    const newForum = new Forum({ title, creator: userId });
     try {
+        // Fetch the corresponding username for the given userId
+        const user = await User2.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        // Use the username as the creator instead of userId
+        const newForum = new Forum({
+            title,
+            creator: user.username // Store the username
+        });
+
         await newForum.save();
         res.status(201).json({ message: 'Forum created successfully' });
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
 });
-app.get('/forums', async (req, res) => {
-    res.status(200).json(await Forum.find({}));
-});
 
 const forumSchema = new mongoose.Schema({
     title: { type: String, required: true },
-    creator: { type: mongoose.Schema.Types.ObjectId, ref: 'User2' }, // Change here
+    creator: { type: String , required: true }, // Change here
     messages: [{ 
         user: { type: mongoose.Schema.Types.ObjectId, ref: 'User2' }, // Change here
         content: String,
@@ -113,16 +118,50 @@ app.get('/styles.css', (req, res) => {
 
 app.use('/public/', express.static(path.resolve("../public")));
 
-
 app.get('/forum', (req, res) => {
     const userId = req.query.userId; // Get the user ID from the query string
     res.sendFile(path.resolve('C:/Users/Tanish/Documents/DisasterAlert/loginsignup/forum.html'));
+});
+app.get('/forum/:forumId', async (req, res) => {
+    res.sendFile(path.resolve('../loginsignup/chatroom.html'));
+});
+app.post('/forums/:forumId/messages', async (req, res) => {
+    const forum = await Forum.findById(req.params.forumId);
+    forum.messages.push({
+        user: req.body.userId,
+        content: req.body.content,
+        timestamp: new Date(),
+    });
+    await forum.save();
+    res.status(200).send("ok");
+});
+
+app.get('/forums', async (req, res) => {
+    try {
+        const forums = await Forum.find({});
+        res.status(200).json(forums);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+});
+
+app.get('/forums/info', async (req, res) => {
+    const forum  = await Forum.findById(req.query.id);
+    for (const message of forum.messages) {
+        const user = await User2.findById(message.user);
+        message.username = user?.username ?? null;
+    }
+    res.status(200).json(forum);
+});
+app.get('/home', (req, res) => {
+    // Serve the home page
+    res.sendFile(path.resolve('C:/Users/Tanish/Documents/DisasterAlert/loginsignup/home.html'));
 });
 // Object to store timers for users
 const userTimers = {};
 
 // Registration Route
-app.post('/', async (req, res) => {
+app.post('/alert', async (req, res) => {
     const { name, houseType, address, demographic, alertFrequency, alertTime } = req.body;
 
     const newUser = new User({ name, houseType, address, demographic, alertFrequency, alertTime });
@@ -163,13 +202,13 @@ const vonage = new Vonage({
   })
 
 
-const sendAlert = async (user) => {
+  const sendAlert = async (user) => {
     // Implement your alert sending logic here
     console.log(`Sending alert to ${user.address} for ${user.houseType}.`);
 
     const formattedAddress = user.address.replace(/\s+/g, '+');
-    
-    const {lat, lng} = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${formattedAddress}&key=AIzaSyBMiSXDpy8JwGQmqRvTQqTuu_5jRyk7g3E`)
+
+    const { lat, lng } = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${formattedAddress}&key=AIzaSyBMiSXDpy8JwGQmqRvTQqTuu_5jRyk7g3E`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok ' + response.statusText);
@@ -177,64 +216,70 @@ const sendAlert = async (user) => {
             return response.json();
         })
         .then(data => {
-            console.log(data);
-
+            if (!data.results || data.results.length === 0) {
+                throw new Error('No results found for the given address');
+            }
             const lat = data.results[0].geometry.location.lat;
             const lng = data.results[0].geometry.location.lng;
             console.log(`Latitude: ${lat}, Longitude: ${lng}`);
-
-            return {lat, lng};
+            return { lat, lng };
         })
-        // .catch(error => {
-        //     console.error('There has been a problem with your fetch operation:', error);
-        // });
-    
+        .catch(error => {
+            console.error('There has been a problem with your fetch operation:', error);
+        });
+
     const csv = await fetch(`https://api.meteomatics.com/${new Date().toISOString()}/weather_text_en:str/${lat},${lng}/csv`, {
         headers: {
-          "authorization": "Basic aGFja3BzdV9wYW5kZXlfdGFuaXNoOjh3NnM3TkhCeTE=",
+            "authorization": "Basic aGFja3BzdV9wYW5kZXlfdGFuaXNoOjh3NnM3TkhCeTE=",
         }
     })
-        .then(response => response.text());
+    .then(response => response.text());
 
     const description = csv.split("\n")[1].split(";")[1];
-    console.log(description)
+    console.log(description);
 
     // gemini integration
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    let generatedContent; // Declare generatedContent here
 
     async function run() {
-    try {
-        const model = await genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        try {
+            const model = await genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+            const result = await model.generateContent(
+                `Hi I am ${user.name}, Design An Alert addressed to me with instructions tailored to the given prompt and information-> Prompt: ${description} and Input: ${user.houseType}, ${user.address}, ${user.demographic} Dont add important note in the end.`
+                );
 
-        const result = await model.generateContent(
-        `Hi I am ${user.name}, Design An Alert addressed to me with instructions tailored to the given prompt and information-> Prompt: ${description} and Input: ${user.houseType}, ${user.address}, ${user.demographic} Dont add important note in the end. If there is an emergency give instructions on what to do and details of nearest hostpitals and exit routes`
-        );
-
-        console.log(result.response.text().replace(/\n\n/g, " ").replace(/\n/g, " "));
-    } catch (error) {
-        console.error("Error generating content:", error);
+            generatedContent = result.response.text().replace(/\n\n/g, " ").replace(/\n/g, " ");
+            console.log(generatedContent); // Log the generated content
+        } catch (error) {
+            console.error("Error generating content:", error);
+        }
     }
+
+    await run(); // Wait for the run function to complete
+
+    const from = "17722470183";
+    const to = "18144411723";
+    const text = generatedContent; // Use generatedContent here
+    async function sendSMS() {
+        await vonage.sms.send({ to, from, text })
+            .then(resp => {
+                console.log('Message sent successfully');
+                console.log(resp);
+            })
+            .catch(err => {
+                console.error(err);
+            });
     }
 
-    run();
-    // const from = "17722470183"
-    // const to = "18144411723"
-    // const text = description
-
-    // async function sendSMS() {
-    //     await vonage.sms.send({to, from, text})
-    //         .then(resp => { console.log('Message sent successfully'); console.log(resp); })
-    //         .catch(err => { console.log('There was an error sending the messages.'); console.error(err); });
-    // }
-
-    // sendSMS();
-
+    sendSMS();
 };
 
 
+
 // Serve HTML
-app.get('/', async (req, res) => {
-    res.status(200).type('html').sendFile(path.resolve("./alert.html"));
+app.get('/alert', async (req, res) => {
+    res.status(200).type('html').sendFile(path.resolve("C:/Users/Tanish/Documents/DisasterAlert/alertform/alert.html"));
 });
 
 // Start Server

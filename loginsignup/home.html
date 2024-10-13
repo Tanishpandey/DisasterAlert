@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Optional CSS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <h1>Welcome</h1>
+    <p>Choose an option below:</p>
+
+    <div id="userOptions">
+        <!-- Links to forums and alerts page with userId -->
+        <a href="#" id="forumsLink">Go to Forums</a>
+        <a href="/alert">Go to Alerts</a> <!-- Static link to alerts -->
+    </div>
+
+    <script>
+        // Extract userId from the URL query parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const userId = urlParams.get('userId');
+
+        // Dynamically set the forums link to include the userId
+        document.getElementById('forumsLink').href = `/forum?userId=${userId}`;
+    </script>
+</body>
+</html>

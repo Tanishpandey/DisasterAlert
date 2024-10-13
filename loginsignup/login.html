@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Optional CSS -->
+    <link rel="stylesheet" href="/styles.css"> <!-- Optional CSS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet">
@@ -51,7 +51,7 @@
                 if (response.ok) {
                     const data = await response.json();
                     // Redirect to the forum page with user ID if needed
-                    window.location.href = `/forum?userId=${data.userId}`; // Use the userId from the response if returned
+                    window.location.href = `/home?userId=${data.userId}`; // Use the userId from the response if returned
                 } else {
                     const errorData = await response.json();
                     alert(errorData.error); // Show error message

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css"> <!-- Optional CSS -->
+    <link rel="stylesheet" href="/styles.css"> <!-- Optional CSS -->
     <title>Forum</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -35,6 +35,10 @@
                 const forumDiv = document.createElement('div');
                 forumDiv.innerHTML = `<h3>${forum.title}</h3><hr /><div>Created by ${forum.creator}</div><hr /><div>${forum.messages.length} messages</div>`;
                 forumContainer.appendChild(forumDiv);
+
+                forumDiv.addEventListener("click", () => {
+                    location.href = `/forum/${forum._id}?userId=${userId}`;
+                });
             });
         }
     
