@@ -105,22 +105,24 @@
    npm install
 
 
-3.**Set Up Environment Variables**
+### 3. **Set Up Environment Variables**
 
-   Create a .env file in the root directory of the project.
-   Add the following environment variables to configure your APIs and app keys:
-      ```bash
-      LLM_API_KEY = your_llm_api_key
-      GOOGLE_GEOCODE_API_KEY=your_google_geocode_api_key
-      METEOMATICS_API_KEY=your_meteomatics_api_key
-      VONAGE_API_KEY=your_vonage_api_key
-      VONAGE_API_SECRET=your_vonage_api_secret
+Create a `.env` file in the root directory of the project.  
+Add the following environment variables to configure your APIs and app keys:
 
-4.**Run the Application Locally**
+   ```bash
+   LLM_API_KEY=your_llm_api_key
+   GOOGLE_GEOCODE_API_KEY=your_google_geocode_api_key
+   METEOMATICS_API_KEY=your_meteomatics_api_key
+   VONAGE_API_KEY=your_vonage_api_key
+   VONAGE_API_SECRET=your_vonage_api_secret
 
-   To start the app, run the following command:
-      ```bash
-      npm start
+
+### 4. **Run the Application Locally**
+
+To start the app, run the following command:
+```bash
+npm start
    The application will be available at http://localhost:3000. Open this URL in your browser to view the app.
 
 5.**Optional - Set Up MongoDB**
@@ -131,6 +133,7 @@
    
    Test the functionality by registering a user, setting up alerts, and checking if real-time notifications are sent to the specified phone number when disaster data changes.
 
+--- 
 ##Potential Future Enhancements
    Hosting: Deploy the app to a cloud service like AWS, Azure, or Heroku for production access.
    Mobile App Integration: Create a mobile app that integrates with the web service for real-time alerts and community engagement.
