@@ -128,7 +128,7 @@
 
    - If you haven't already, you'll need to set up a MongoDB instance to store user data and forum discussions.
    - You can use MongoDB Atlas for a cloud-based solution or run a local instance of MongoDB.
-   - 
+     
 6. **Test the Application**
    - Test the functionality by registering a user, setting up alerts, and checking if real-time notifications are sent to the specified phone number when disaster data changes.
 
