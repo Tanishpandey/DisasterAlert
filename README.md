@@ -109,12 +109,12 @@
 
    Create a .env file in the root directory of the project.
    Add the following environment variables to configure your APIs and app keys:
-   ```bash
-   LLM_API_KEY = your_llm_api_key
-   GOOGLE_GEOCODE_API_KEY=your_google_geocode_api_key
-   METEOMATICS_API_KEY=your_meteomatics_api_key
-   VONAGE_API_KEY=your_vonage_api_key
-   VONAGE_API_SECRET=your_vonage_api_secret
+      ```bash
+      LLM_API_KEY = your_llm_api_key
+      GOOGLE_GEOCODE_API_KEY=your_google_geocode_api_key
+      METEOMATICS_API_KEY=your_meteomatics_api_key
+      VONAGE_API_KEY=your_vonage_api_key
+      VONAGE_API_SECRET=your_vonage_api_secret
 
 4.**Run the Application Locally**
 
