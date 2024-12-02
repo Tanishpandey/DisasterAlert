@@ -94,3 +94,52 @@
    ```bash
    git clone https://github.com/tanishpandey/DisasterAlert.git
    cd DisasterAlert
+
+
+2. **Install Dependencies**
+
+   Make sure you have Node.js and npm installed. If not, download and install them from Node.js official site.
+   Install the necessary packages by running the following command in the project root directory:
+   ```bash
+   Copy code
+   npm install
+
+
+3.**Set Up Environment Variables**
+
+   Create a .env file in the root directory of the project.
+   Add the following environment variables to configure your APIs and app keys:
+   ```bash
+   LLM_API_KEY = your_llm_api_key
+   GOOGLE_GEOCODE_API_KEY=your_google_geocode_api_key
+   METEOMATICS_API_KEY=your_meteomatics_api_key
+   VONAGE_API_KEY=your_vonage_api_key
+   VONAGE_API_SECRET=your_vonage_api_secret
+
+4.**Run the Application Locally**
+
+   To start the app, run the following command:
+      ```bash
+      npm start
+   The application will be available at http://localhost:3000. Open this URL in your browser to view the app.
+
+5.**Optional - Set Up MongoDB**
+
+   If you haven't already, you'll need to set up a MongoDB instance to store user data and forum discussions.
+   You can use MongoDB Atlas for a cloud-based solution or run a local instance of MongoDB.
+   Test the Application
+   
+   Test the functionality by registering a user, setting up alerts, and checking if real-time notifications are sent to the specified phone number when disaster data changes.
+
+##Potential Future Enhancements
+   Hosting: Deploy the app to a cloud service like AWS, Azure, or Heroku for production access.
+   Mobile App Integration: Create a mobile app that integrates with the web service for real-time alerts and community engagement.
+   Machine Learning: Implement machine learning models to predict disaster events more accurately and provide advanced notifications.
+   IoT Integration: Allow integration with IoT devices for automatic responses, such as turning off electrical appliances during a wildfire warning.
+   Conclusion
+   DisasterAlert is an innovative application designed to improve disaster preparedness and response by providing real-time alerts, community engagement, and a personalized user experience. The platform utilizes multiple APIs, AI, and SMS notifications to keep users informed during emergencies.
+   Feel free to explore the repository, contribute to the project, or contact me for further questions!
+
+
+
+
