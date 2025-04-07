@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tailored Alert Form</title>
+    <link rel="stylesheet" href="/pages/styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>DisasterAlert</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/home">Home</a></li>
+                    <li><a href="/forum">Community Forum</a></li>
+                    <li><a href="/alert" class="active">Tailored Alerts</a></li>
+                    <li><a href="/report">Report Incident</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="page-header">
+        <div class="container">
+            <h1>Tailored Disaster Alerts Setup</h1>
+        </div>
+    </section>
+    <section class="report-section">
+        <div class="container">
+            <div class="form-container">
+                <form id="alertForm" class="incident-form">
+
+                    <div class="form-group">
+                        <label for="name">Your Name</label>
+                        <input type="text" id="name" name="name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="houseType">House Type</label>
+                        <select id="houseType" name="houseType" required>
+                            <option value="" disabled selected>Select your house type</option>
+                            <option value="single-family">Single Family</option>
+                            <option value="multi-family">Multi-Family</option>
+                            <option value="condo">Condominium</option>
+                            <option value="townhouse">Townhouse</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="address">Your Address</label>
+                        <input type="text" id="address" name="address" placeholder="Enter address or describe location" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="demographic">Family Demographic</label>
+                        <select id="demographic" name="demographic" required>
+                            <option value="" disabled selected>Select family demographic</option>
+                            <option value="children">Children</option>
+                            <option value="elderly">Elderly</option>
+                            <option value="mixed">Mixed</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="alertFrequency">Alert Frequency:</label>
+                        <select id="alertFrequency" name="alertFrequency" required>
+                            <option value="" disabled selected>Select alert frequency</option>
+                            <option value="0.25">Every 15 seconds</option>
+                            <option value="5">Every 5 minutes</option>
+                            <option value="10">Every 10 minutes</option>
+                            <option value="15">Every 15 minutes</option>
+                            <option value="20">Every 20 minutes</option>
+                            <option value="25">Every 25 minutes</option>
+                            <option value="30">Every 30 minutes</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="alertTime">Time for Alert:</label>
+                        <select id="alertTime" name="alertTime" required>
+                            <option value="" disabled selected>Select time duration</option>
+                            <option value="0.00961111">30 seconds</option>
+                            <option value="24">24 hours</option>
+                            <option value="48">48 hours</option>
+                        </select>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="reset" class="btn btn-secondary">Clear Form</button>
+                        <button type="submit" class="btn btn-primary">Submit Report</button>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="reporting-info">
+                <div class="info-panel">
+                    <h3>Why Get Tailored Alerts?</h3>
+                    <p>Usually the alert messages you get from news channels are too generalized and not exactly telling you what to do. When you signup for tailored alerts, we use AI to give you tailored disaster notifications telling you exactly what to do to keep you and your family safe!</p>
+                    
+                    <h3>What Happens After Submitting</h3>
+                    <ol>
+                        <li>You are set up for tailored alerts based on the frequency you selected</li>
+                        <li>If you want to use a time not provided on the form, please email us and we will set it up for you!</li>
+                    </ol>
+
+                </div>
+                
+                <div class="emergency-contact">
+                    <h3>Emergency Contacts</h3>
+                    <div class="contact-item">
+                        <span class="contact-label">Emergency Services:</span>
+                        <span class="contact-value">911</span>
+                    </div>
+                    <div class="contact-item">
+                        <span class="contact-label">Disaster Hotline:</span>
+                        <span class="contact-value">1-800-XXX-XXXX</span>
+                    </div>
+                    <div class="contact-item">
+                        <span class="contact-label">Relief Services:</span>
+                        <span class="contact-value">1-800-XXX-XXXX</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+
+
+<script>
+    document.getElementById('alertForm').addEventListener('submit', async function(event) {
+        event.preventDefault(); // Prevent the default form submission
+        
+        // Gather form data
+        const formData = new FormData(this);
+
+        // Split data into variables
+        const name = formData.get('name');
+        const houseType = formData.get('houseType');
+        const address = formData.get('address');
+        const demographic = formData.get('demographic');
+        
+        // Extracting alertFrequency and alertTime directly from select elements and convert to integer
+        const alertFrequency = parseFloat(document.getElementById('alertFrequency').value, 10); // Converts to integer
+        const alertTime = parseFloat(document.getElementById('alertTime').value, 10); // Converts to integer
+
+        // Log individual variables
+        console.log('Name:', name);
+        console.log('House Type:', houseType);
+        console.log('Address:', address);
+        console.log('Demographic:', demographic);
+        console.log('Alert Frequency:', alertFrequency); // This will be an integer
+        console.log('Alert Time:', alertTime); // This will be an integer
+
+        // Create an object to send to the server
+        const data = {
+            name,
+            houseType,
+            address,
+            demographic,
+            alertFrequency,
+            alertTime
+        };
+        
+        try {
+            // Send data to your backend/server
+            const response = await fetch('http://localhost:5000/alert', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data), // Send all data as an object
+            });
+
+            if (response.ok) {
+                console.log('Form submitted successfully:', await response.json());
+                alert('Form submitted successfully!');
+            } else {
+                console.error('Form submission failed:', response.statusText);
+                alert('Error submitting form: ' + response.statusText);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error submitting form: ' + error.message);
+        }
+    });
+</script>
+
+</body>
+</html>

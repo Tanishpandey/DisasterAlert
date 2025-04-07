@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DisasterAlert</title>
+    <link rel="stylesheet" href="/pages/styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>DisasterAlert</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#disaster-types">Disaster Types</a></li>
+                    <li><a href="#community-reports">Community Reports</a></li>
+                    <li><a href="#tailored-alerts">Tailored Alerts</a></li>
+                    <li><a href="/login" class="btn btn-secondary">Login</a></li>
+                    <li><a href="/register" class="btn btn-secondary">Register</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Stay Prepared, Stay Safe</h1>
+                <p>Get personalized disaster alerts, preparedness resources, and connect with your community to ensure safety when disaster strikes.</p>
+                <div class="hero-buttons">
+                    <a href="/register" class="btn btn-secondary">Register Now!</a>
+                    <a href="/login" class="btn btn-secondary">Login</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="disaster-types" id="disaster-types">
+        <div class="container">
+            <h2>Prepare for Different Types of Disasters</h2>
+            <div class="disaster-grid">
+                <div class="disaster-card">
+                    <div class="disaster-icon earthquake"></div>
+                    <h3>Earthquakes</h3>
+                    <p>Learn what to do before, during, and after an earthquake.</p>
+                    <a href="/register" class="learn-more">Get Tailored Guidance</a>
+                </div>
+                <div class="disaster-card">
+                    <div class="disaster-icon flood"></div>
+                    <h3>Floods</h3>
+                    <p>Prepare for flooding and know the evacuation routes.</p>
+                    <a href="/register" class="learn-more">Get Tailored Guidance</a>
+                </div>
+                <div class="disaster-card">
+                    <div class="disaster-icon wildfire"></div>
+                    <h3>Wildfires</h3>
+                    <p>Create defensible space and have an evacuation plan.</p>
+                    <a href="/register" class="learn-more">Get Tailored Guidance</a>
+                </div>
+                <div class="disaster-card">
+                    <div class="disaster-icon hurricane"></div>
+                    <h3>Hurricanes</h3>
+                    <p>Prepare your home and know your evacuation zone.</p>
+                    <a href="/register" class="learn-more">Get Tailored Guidance</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="tailored-alerts" id="tailored-alerts">
+        <div class="container">
+            <div class="alerts-content">
+                <h2>Personalized Disaster Alerts</h2>
+                <p>Our advanced system provides you with tailored alerts based on your location, preferences, and specific risk factors.</p>
+                
+                <div class="alert-features">
+                    <div class="alert-feature">
+                        <h3>Location-Based</h3>
+                        <p>Receive alerts specific to your area, ensuring you only get information that affects you directly.</p>
+                    </div>
+                    <div class="alert-feature">
+                        <h3>Real-Time Updates</h3>
+                        <p>Get immediate notifications as situations develop or change, helping you stay one step ahead.</p>
+                    </div>
+                    <div class="alert-feature">
+                        <h3>Multiple Channels</h3>
+                        <p>Choose how you want to receive alerts: SMS, email, push notifications, or in-app messages.</p>
+                    </div>
+                </div>
+                
+                <div class="cta-buttons">
+                    <a href="/register" class="btn btn-primary">Create Your Alert Form</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="community-reports" id="community-reports">
+        <div class="container">
+            <h2>Recent Community Reports</h2>
+            <div class="reports-container" id="recentReports">
+                <!-- Reports will be loaded dynamically -->
+                <p class="loading">Loading recent reports...</p>
+            </div>
+            <a href="/forum" class="btn btn-secondary">Visit Community Forum</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-sections">
+                <div class="footer-section">
+                    <h3>DisasterAlert</h3>
+                    <p>Empowering communities with disaster prevention resources and emergency preparedness.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#disaster-types">Disaster Types</a></li>
+                        <li><a href="#community-reports">Community Reports</a></li>
+                        <li><a href="#tailored-alerts">Tailored Alerts</a></li>
+                        <li><a href="/forum">Community Forum</a></li>
+                        <li><a href="/login">Login</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Emergency Contacts</h3>
+                    <ul>
+                        <li>Emergency: 911</li>
+                        <li>Disaster Hotline: 1-800-XXX-XXXX</li>
+                        <li>Relief Services: 1-800-XXX-XXXX</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Connect With Us</h3>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon facebook"></a>
+                        <a href="#" class="social-icon twitter"></a>
+                        <a href="#" class="social-icon instagram"></a>
+                    </div>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Your email address">
+                        <button type="submit" class="btn btn-primary">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>DisasterAlert - Made By Tanish Pandey</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const nav = document.querySelector('nav');
+
+        
+            // Load recent community reports from the forum
+            // Addd logic to fetch from community section and display recent 3 here!!!
+            const recentReports = document.getElementById('recentReports');
+            if (recentReports) {
+                loadRecentReports();
+            }
+        });
+        
+        // Function to load recent community reports
+        function loadRecentReports() {
+            const reportsContainer = document.getElementById('recentReports');
+            
+            if (!reportsContainer) return;
+            
+            // Simulate loading delay
+            setTimeout(() => {
+                const reports = [
+                    {
+                        title: 'Flooding in Downtown Area',
+                        description: 'Several streets are flooded due to heavy rainfall. Avoid 5th and Main St.',
+                        type: 'flood',
+                        severity: 'high',
+                        date: 'April 5, 2025',
+                        reporter: 'City Emergency Services'
+                    },
+                    {
+                        title: 'Fallen Trees After Windstorm',
+                        description: 'Multiple trees down in the park area. Crews are working to clear pathways.',
+                        type: 'storm',
+                        severity: 'medium',
+                        date: 'April 4, 2025',
+                        reporter: 'Park Department'
+                    },
+                    {
+                        title: 'Gas Leak Reported',
+                        description: 'Gas leak contained in the industrial district. Area has been evacuated.',
+                        type: 'hazard',
+                        severity: 'high',
+                        date: 'April 3, 2025',
+                        reporter: 'Fire Department'
+                    }
+                ];
+                
+                reportsContainer.innerHTML = '';
+                
+                reports.forEach(report => {
+                    const reportEl = document.createElement('div');
+                    reportEl.className = 'report-card';
+                    reportEl.innerHTML = `
+                        <div class="report-header ${report.type}">
+                            <span class="report-type">${report.type}</span>
+                            <span class="report-severity ${report.severity}">${report.severity}</span>
+                        </div>
+                        <div class="report-body">
+                            <h3>${report.title}</h3>
+                            <p>${report.description}</p>
+                        </div>
+                        <div class="report-footer">
+                            <span class="report-date">${report.date}</span>
+                            <span class="report-reporter">${report.reporter}</span>
+                        </div>
+                    `;
+                    reportsContainer.appendChild(reportEl);
+                });
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

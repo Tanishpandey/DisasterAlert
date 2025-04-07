@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DisasterAlert - Report Incident</title>
+    <link rel="stylesheet" href="/pages/styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>DisasterAlert</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/home">Home</a></li>
+                    <li><a href="/forum">Community Forum</a></li>
+                    <li><a href="/alert">Tailored Alerts</a></li>
+                    <li><a href="/report" class="active">Report Incident</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="page-header">
+        <div class="container">
+            <h1>Report an Incident</h1>
+            <p>Help your community by reporting disaster incidents, hazards, or areas that need attention.</p>
+        </div>
+    </section>
+
+    <section class="report-section">
+        <div class="container">
+            <div class="form-container">
+                <div class="form-notice alert-info">
+                    <strong>Important:</strong> For emergencies requiring immediate assistance, please call 911 instead of using this form.
+                </div>
+                
+                <form id="reportForm" class="incident-form">
+                    <div class="form-group">
+                        <label for="incidentType">Type of Incident*</label>
+                        <select id="incidentType" name="incidentType" required>
+                            <option value="">Select incident type</option>
+                            <option value="flood">Flooding</option>
+                            <option value="fire">Fire</option>
+                            <option value="earthquake">Earthquake Damage</option>
+                            <option value="landslide">Landslide</option>
+                            <option value="storm">Storm Damage</option>
+                            <option value="hazard">Hazardous Condition</option>
+                            <option value="infrastructure">Infrastructure Failure</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="otherIncidentContainer" style="display: none;">
+                        <label for="otherIncident">Please specify the incident type*</label>
+                        <input type="text" id="otherIncident" name="otherIncident">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="incidentSeverity">Severity Level*</label>
+                        <div class="severity-scale">
+                            <div class="severity-option">
+                                <input type="radio" id="severityLow" name="severity" value="low" required>
+                                <label for="severityLow" class="severity low">Low</label>
+                            </div>
+                            <div class="severity-option">
+                                <input type="radio" id="severityMedium" name="severity" value="medium">
+                                <label for="severityMedium" class="severity medium">Medium</label>
+                            </div>
+                            <div class="severity-option">
+                                <input type="radio" id="severityHigh" name="severity" value="high">
+                                <label for="severityHigh" class="severity high">High</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="incidentDate">Date of Incident*</label>
+                            <input type="date" id="incidentDate" name="incidentDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="incidentTime">Time of Incident</label>
+                            <input type="time" id="incidentTime" name="incidentTime">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="incidentLocation">Location*</label>
+                        <input type="text" id="incidentLocation" name="incidentLocation" placeholder="Enter address or describe location" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="locationDetails">Location Details</label>
+                        <input type="text" id="locationDetails" name="locationDetails" placeholder="Landmark, cross street, or other details to help locate">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="incidentDescription">Description of Incident*</label>
+                        <textarea id="incidentDescription" name="incidentDescription" rows="5" placeholder="Please provide as much detail as possible" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="peopleAffected">People Affected</label>
+                        <select id="peopleAffected" name="peopleAffected">
+                            <option value="">Unknown</option>
+                            <option value="none">None</option>
+                            <option value="few">Few (1-5)</option>
+                            <option value="several">Several (6-20)</option>
+                            <option value="many">Many (20+)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Upload Photos (optional)</label>
+                        <div class="file-upload">
+                            <input type="file" id="incidentPhotos" name="incidentPhotos" multiple accept="image/*">
+                            <label for="incidentPhotos" class="file-upload-label">
+                                <span class="icon-upload"></span>
+                                Choose Files
+                            </label>
+                            <div class="file-upload-info">Maximum 3 photos, 5MB each</div>
+                        </div>
+                        <div id="photoPreview" class="photo-preview"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reporterName">Your Name</label>
+                        <input type="text" id="reporterName" name="reporterName">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reporterContact">Contact Information</label>
+                        <input type="text" id="reporterContact" name="reporterContact" placeholder="Email or phone number">
+                    </div>
+
+                    <div class="form-group checkbox">
+                        <input type="checkbox" id="anonymous" name="anonymous">
+                        <label for="anonymous">Submit anonymously</label>
+                    </div>
+
+                    <div class="form-group checkbox">
+                        <input type="checkbox" id="followup" name="followup">
+                        <label for="followup">I would like to receive updates about this report</label>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="reset" class="btn btn-secondary">Clear Form</button>
+                        <button type="submit" class="btn btn-primary">Submit Report</button>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="reporting-info">
+                <div class="info-panel">
+                    <h3>Why Report Incidents?</h3>
+                    <p>Your reports help us identify patterns, allocate resources, and take preventive measures against future disasters.</p>
+                    
+                    <h3>What Happens After Reporting</h3>
+                    <ol>
+                        <li>Your report is reviewed by our team</li>
+                        <li>Information is shared with relevant authorities and surrounding communities</li>
+                        <li>The incident is tracked and monitored</li>
+                    </ol>
+                    
+                    <h3>Tips for Effective Reporting</h3>
+                    <ul>
+                        <li>Be as specific as possible about the location</li>
+                        <li>Include photos when available</li>
+                        <li>Provide contact information for follow-up</li>
+                        <li>Report as soon as it's safe to do so</li>
+                    </ul>
+                </div>
+                
+                <div class="emergency-contact">
+                    <h3>Emergency Contacts</h3>
+                    <div class="contact-item">
+                        <span class="contact-label">Emergency Services:</span>
+                        <span class="contact-value">911</span>
+                    </div>
+                    <div class="contact-item">
+                        <span class="contact-label">Disaster Hotline:</span>
+                        <span class="contact-value">1-800-XXX-XXXX</span>
+                    </div>
+                    <div class="contact-item">
+                        <span class="contact-label">Relief Services:</span>
+                        <span class="contact-value">1-800-XXX-XXXX</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-sections">
+                <div class="footer-section">
+                    <h3>DisasterAlert</h3>
+                    <p>Empowering communities with disaster prevention resources and emergency preparedness.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#disaster-types">Disaster Types</a></li>
+                        <li><a href="#community-reports">Community Reports</a></li>
+                        <li><a href="#tailored-alerts">Tailored Alerts</a></li>
+                        <li><a href="/forum">Community Forum</a></li>
+                        <li><a href="/login">Login</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Emergency Contacts</h3>
+                    <ul>
+                        <li>Emergency: 911</li>
+                        <li>Disaster Hotline: 1-800-XXX-XXXX</li>
+                        <li>Relief Services: 1-800-XXX-XXXX</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Connect With Us</h3>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon facebook"></a>
+                        <a href="#" class="social-icon twitter"></a>
+                        <a href="#" class="social-icon instagram"></a>
+                    </div>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Your email address">
+                        <button type="submit" class="btn btn-primary">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>DisasterAlert - Made By Tanish Pandey</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/form.js"></script>
+</body>
+</html>

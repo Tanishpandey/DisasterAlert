@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="/pages/styles.css"> <!-- Optional CSS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="Container"></div>
+        <div class="logo">
+            <h1>DisasterAlert</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/login" class="active btn btn-primary">Login</a></li>
+                <li><a href="/register" class="btn btn-secondary">Register</a></li>
+            </ul>
+        </nav>
+        </div>
+        </div>
+    </header>
+    <section class="auth-section">
+        <div class="container">
+            <div class="auth-container">
+                <div class="auth-header">
+                    <h2>Create Your Account</h2>
+                    <p>Join our community to access personalized disaster prevention resources.</p>
+                </div>
+                <form id="Login-Form" class="auth-form">
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required>
+                        <div class="password-strength" id="passwordStrength"></div>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary btn-block">Login</button>
+                    </div>
+                    <div class="auth-links">
+                        <span>Don't Have An Account? <a href="/register">Register</a></span>
+                    </div>
+                </form>
+                <div class="auth-separator">
+                    <span>OR</span>
+                </div>
+                <div class="social-login">
+                    <button class="btn btn-social btn-google">
+                        <span class="icon-google"></span>
+                        Continue with Google
+                    </button>
+                    <button class="btn btn-social btn-facebook">
+                        <span class="icon-facebook"></span>
+                        Continue with Facebook
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+
+    <footer>
+        <div class="container">
+            <div class="footer-sections">
+                <div class="footer-section">
+                    <h3>DisasterAlert</h3>
+                    <p>Empowering communities with disaster prevention resources and emergency preparedness.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#disaster-types">Disaster Types</a></li>
+                        <li><a href="#community-reports">Community Reports</a></li>
+                        <li><a href="#tailored-alerts">Tailored Alerts</a></li>
+                        <li><a href="/forum">Community Forum</a></li>
+                        <li><a href="/register">Register</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Emergency Contacts</h3>
+                    <ul>
+                        <li>Emergency: 911</li>
+                        <li>Disaster Hotline: 1-800-XXX-XXXX</li>
+                        <li>Relief Services: 1-800-XXX-XXXX</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Connect With Us</h3>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon facebook"></a>
+                        <a href="#" class="social-icon twitter"></a>
+                        <a href="#" class="social-icon instagram"></a>
+                    </div>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Your email address">
+                        <button type="submit" class="btn btn-primary">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>DisasterAlert - Made By Tanish Pandey</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Correctly reference the form ID here
+        document.getElementById('Login-Form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('http://localhost:5000/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password }),
+                });
+
+
+                // Check if the response is successful
+                if (response.ok) {
+                    const data = await response.json();
+                    // Redirect to the forum page with user ID if needed
+                    window.location.href = `/home?userId=${data.userId}`; // Use the userId from the response if returned
+                } else {
+                    const errorData = await response.json();
+                    alert(errorData.error); // Show error message
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('There was an error processing your request.'); // General error alert
+            }
+        });
+    </script>
+</body>
+</html>

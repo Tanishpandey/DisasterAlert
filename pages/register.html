@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DisasterAlert-Register</title>
+    <link rel="stylesheet" href="/pages/styles.css">
+</head>
+<body>
+    <header>
+        <div class="Container"></div>
+        <div class="logo">
+            <h1>DisasterAlert</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/login" class="btn btn-secondary">Login</a></li>
+                <li><a href="/register" class="active btn btn-primary">Register</a></li>
+            </ul>
+        </nav>
+        </div>
+        </div>
+    </header>
+    <section class="auth-section">
+        <div class="container">
+            <div class="auth-container">
+                <div class="auth-header">
+                    <h2>Create Your Account</h2>
+                    <p>Join our community to access personalized disaster prevention resources.</p>
+                </div>
+                <form id="signupForm" class="auth-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="Username">Username</label>
+                            <input type="text" id="username" name="username" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required>
+                        <div class="password-strength" id="passwordStrength"></div>
+                    </div>
+
+                    <div class="form-group checkbox">
+                        <input type="checkbox" id="terms" name="terms" required>
+                        <label for="terms">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+                    </div>
+                    <div class="auth-links">
+                        <span>Already have an account? <a href="/login">Login</a></span>
+                    </div>
+                </form>
+                <div class="auth-separator">
+                    <span>OR</span>
+                </div>
+                <div class="social-login">
+                    <button class="btn btn-social btn-google">
+                        <span class="icon-google"></span>
+                        Continue with Google
+                    </button>
+                    <button class="btn btn-social btn-facebook">
+                        <span class="icon-facebook"></span>
+                        Continue with Facebook
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer>
+        <div class="container">
+            <div class="footer-sections">
+                <div class="footer-section">
+                    <h3>DisasterAlert</h3>
+                    <p>Empowering communities with disaster prevention resources and emergency preparedness.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#disaster-types">Disaster Types</a></li>
+                        <li><a href="#community-reports">Community Reports</a></li>
+                        <li><a href="#tailored-alerts">Tailored Alerts</a></li>
+                        <li><a href="/forum">Community Forum</a></li>
+                        <li><a href="/login">Login</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Emergency Contacts</h3>
+                    <ul>
+                        <li>Emergency: 911</li>
+                        <li>Disaster Hotline: 1-800-XXX-XXXX</li>
+                        <li>Relief Services: 1-800-XXX-XXXX</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Connect With Us</h3>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon facebook"></a>
+                        <a href="#" class="social-icon twitter"></a>
+                        <a href="#" class="social-icon instagram"></a>
+                    </div>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Your email address">
+                        <button type="submit" class="btn btn-primary">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>DisasterAlert - Made By Tanish Pandey</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            console.log(username,email,password)
+
+            try {
+                const response = await fetch('http://localhost:5000/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username, email, password }),
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    // Redirect to the forum page with the new user's ID
+                    window.location.href = `/home?userId=${data.userId}`; // Redirect after successful registration
+                } else {
+                    const errorData = await response.json();
+                    alert(errorData.error); // Show error message
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('There was an error processing your request.'); // General error alert
+            }
+        });
+    </script>
+</body>
+</html>

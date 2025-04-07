@@ -8,6 +8,7 @@ import { Vonage } from '@vonage/server-sdk';
 import dotenv from 'dotenv';
 dotenv.config();
 
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 
 const app = express();
@@ -44,9 +45,30 @@ const User = mongoose.model('UserData', userSchema);
 
 const User2 = mongoose.model('UserInfo', userSchema2);
 
+app.use(express.static(path.join(__dirname, 'pages')));
+
+app.get('/pages/styles.css', (req, res) => {
+    res.setHeader('Content-Type', 'text/css');
+    res.sendFile(path.resolve('../pages/styles.css'));
+});
+
 // Registration Route
+
+app.get('',async (req,res)=>{
+    res.sendFile(path.resolve('../pages/landing.html'));
+})
 app.post('/register', async (req, res) => {
     const { username, email, password } = req.body;
+    const user_name = await User2.findOne({ username });
+    if (user_name){
+        return res.status(400).json({ error: 'Username Already exists. Please try a different username'})
+    }
+    const email_db = await User2.findOne({ email });
+    if (email_db){
+        return res.status(400).json({ error: 'Email Already exists. Login!'})
+    }
+
+
 
     const newUser = new User2({ username, email, password });
     try {
@@ -61,7 +83,7 @@ app.post('/register', async (req, res) => {
 });
 
 app.get('/register', (req, res) => {
-    res.sendFile(path.resolve('C:/Users/Tanish/Documents/DisasterAlert/loginsignup/register.html')); 
+    res.sendFile(path.resolve('../pages/register.html')); 
 });
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
@@ -74,8 +96,12 @@ app.post('/login', async (req, res) => {
     return res.status(200).json({userId: user._id});
 });
 app.get('/login', (req, res) => {
-    res.sendFile(path.resolve('C:/Users/Tanish/Documents/DisasterAlert/loginsignup/login.html')); 
+    res.sendFile(path.resolve('../pages/login.html')); 
 });
+
+app.get('/report',(req,res)=>{
+    res.sendFile(path.resolve('../pages/report.html'));
+})
 
 app.post('/forums', async (req, res) => {
     const { title, userId } = req.body;
@@ -112,24 +138,20 @@ const forumSchema = new mongoose.Schema({
 
 const Forum = mongoose.model('Forum', forumSchema);
 
-app.get('/styles.css', (req, res) => {
-    res.sendFile(path.resolve('../loginsignup/styles.css'));
-});
 
-app.use('/public/', express.static(path.resolve("../public")));
 
 app.get('/forum', (req, res) => {
     const userId = req.query.userId; // Get the user ID from the query string
-    res.sendFile(path.resolve('C:/Users/Tanish/Documents/DisasterAlert/loginsignup/forum.html'));
+    res.sendFile(path.resolve('../pages/forum.html'));
 });
 app.get('/forum/:forumId', async (req, res) => {
-    res.sendFile(path.resolve('../loginsignup/chatroom.html'));
+    res.sendFile(path.resolve('../pages/chatroom.html'));
 });
 app.post('/forums/:forumId/messages', async (req, res) => {
     const forum = await Forum.findById(req.params.forumId);
     forum.messages.push({
         user: req.body.userId,
-        content: req.body.content,
+        content: String,
         timestamp: new Date(),
     });
     await forum.save();
@@ -164,9 +186,11 @@ app.get('/forums/info', async (req, res) => {
 });
 app.get('/home', (req, res) => {
     // Serve the home page
-    res.sendFile(path.resolve('C:/Users/Tanish/Documents/DisasterAlert/loginsignup/home.html'));
+    res.sendFile(path.resolve('../pages/home.html'));
 });
 // Object to store timers for users
+
+// ALERTSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 const userTimers = {};
 
 // Registration Route
@@ -197,7 +221,7 @@ app.post('/alert', async (req, res) => {
             delete userTimers[newUser._id]; // Clean 
             console.log('Alert frequency timer stopped for user:', newUser._id);
         }, totalTime);
-
+        // add a thank you or smth here
         res.status(201).json({ message: 'User registered successfully' });
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -215,23 +239,23 @@ const vonage = new Vonage({
     // Implement your alert sending logic here
     console.log(`Sending alert to ${user.address} for ${user.houseType}.`);
 
-    const formattedAddress = user.address.replace(/\s+/g, '+');
-
-    const { lat, lng } = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${formattedAddress}&key=AIzaSyBMiSXDpy8JwGQmqRvTQqTuu_5jRyk7g3E`)
+    const formattedAddress = encodeURIComponent(user.address);
+    const { lat, lng } = await fetch(`https://api.geoapify.com/v1/geocode/search?text=${formattedAddress}&key=8221bff488f1484783281c8a5618865f`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok ' + response.statusText);
             }
             return response.json();
         })
-        .then(data => {
-            if (!data.results || data.results.length === 0) {
-                throw new Error('No results found for the given address');
-            }
-            const lat = data.results[0].geometry.location.lat;
-            const lng = data.results[0].geometry.location.lng;
-            console.log(`Latitude: ${lat}, Longitude: ${lng}`);
-            return { lat, lng };
+        .then(result => {
+            console.log(result,'Hiiii')
+            // if (!data.results || data.results.length === 0) {
+            //     throw new Error('No results found for the given address');
+            // }
+            // const lat = data.results[0].geometry.location.lat;
+            // const lng = data.results[0].geometry.location.lng;
+            // console.log(`Latitude: ${lat}, Longitude: ${lng}`);
+            // return { lat, lng };
         })
         .catch(error => {
             console.error('There has been a problem with your fetch operation:', error);
@@ -286,9 +310,8 @@ const vonage = new Vonage({
 
 
 
-// Serve HTML
 app.get('/alert', async (req, res) => {
-    res.status(200).type('html').sendFile(path.resolve("C:/Users/Tanish/Documents/DisasterAlert/alertform/alert.html"));
+    res.status(200).type('html').sendFile(path.resolve("../pages/alert.html"));
 });
 
 // Start Server
