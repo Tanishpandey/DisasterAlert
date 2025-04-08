@@ -138,14 +138,14 @@
                 if (response.ok) {
                     const data = await response.json();
                     // Redirect to the forum page with the new user's ID
-                    window.location.href = `/home?userId=${data.userId}`; // Redirect after successful registration
+                    window.location.href = `/home?userId=${data.userId}`; 
                 } else {
                     const errorData = await response.json();
-                    alert(errorData.error); // Show error message
+                    alert(errorData.error);
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('There was an error processing your request.'); // General error alert
+                alert('There was an error processing your request.');
             }
         });
     </script>

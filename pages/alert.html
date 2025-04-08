@@ -130,28 +130,25 @@
     document.getElementById('alertForm').addEventListener('submit', async function(event) {
         event.preventDefault(); // Prevent the default form submission
         
-        // Gather form data
         const formData = new FormData(this);
 
-        // Split data into variables
         const name = formData.get('name');
         const houseType = formData.get('houseType');
         const address = formData.get('address');
         const demographic = formData.get('demographic');
         
-        // Extracting alertFrequency and alertTime directly from select elements and convert to integer
         const alertFrequency = parseFloat(document.getElementById('alertFrequency').value, 10); // Converts to integer
         const alertTime = parseFloat(document.getElementById('alertTime').value, 10); // Converts to integer
 
-        // Log individual variables
+
         console.log('Name:', name);
         console.log('House Type:', houseType);
         console.log('Address:', address);
         console.log('Demographic:', demographic);
-        console.log('Alert Frequency:', alertFrequency); // This will be an integer
-        console.log('Alert Time:', alertTime); // This will be an integer
+        console.log('Alert Frequency:', alertFrequency);
+        console.log('Alert Time:', alertTime);
 
-        // Create an object to send to the server
+        // object to send to the server
         const data = {
             name,
             houseType,
@@ -162,13 +159,12 @@
         };
         
         try {
-            // Send data to your backend/server
             const response = await fetch('http://localhost:5000/alert', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(data), // Send all data as an object
+                body: JSON.stringify(data),
             });
 
             if (response.ok) {
