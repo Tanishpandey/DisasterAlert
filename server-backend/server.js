@@ -8,7 +8,9 @@ import { Vonage } from '@vonage/server-sdk';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
+
+const __dirname = path.dirname(new URL(import.meta.url).pathname);  
+
 
 
 const app = express();
@@ -19,7 +21,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // MongoDB Connection
-mongoose.connect('mongodb+srv://tanishpandey3:NextStep123@nextstep.24ldi.mongodb.net/NextStep')
+mongoose.connect(process.env.MONGO_DB_API)
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.log(err));
 
@@ -126,6 +128,13 @@ app.post('/forums', async (req, res) => {
     }
 });
 
+
+
+
+// Forum Displays TBD :: FIX rendering - add localstorage for users and display
+
+
+
 const forumSchema = new mongoose.Schema({
     title: { type: String, required: true },
     creator: { type: String , required: true }, // Change here
@@ -136,8 +145,9 @@ const forumSchema = new mongoose.Schema({
     }]
 });
 
-const Forum = mongoose.model('Forum', forumSchema);
 
+
+const Forum = mongoose.model('Forum', forumSchema);
 
 
 app.get('/forum', (req, res) => {
@@ -147,7 +157,7 @@ app.get('/forum', (req, res) => {
 app.get('/forum/:forumId', async (req, res) => {
     res.sendFile(path.resolve('../pages/chatroom.html'));
 });
-app.post('/forums/:forumId/messages', async (req, res) => {
+app.post('/forum/:forumId/messages', async (req, res) => {
     const forum = await Forum.findById(req.params.forumId);
     forum.messages.push({
         user: req.body.userId,
@@ -157,33 +167,8 @@ app.post('/forums/:forumId/messages', async (req, res) => {
     await forum.save();
     res.status(200).send("ok");
 });
+///// End Forum ///
 
-app.get('/forums', async (req, res) => {
-    try {
-        const forums = await Forum.find({});
-        res.status(200).json(forums);
-    } catch (error) {
-        res.status(400).json({ error: error.message });
-    }
-});
-
-app.get('/forums/info', async (req, res) => {
-    const forumId = req.query.id; // Get the forum ID from the query parameters
-    const forum = await Forum.findById(forumId);
-    
-    // Check if forum was found
-    if (!forum) {
-        return res.status(404).json({ error: 'Forum not found' });
-    }
-
-    // Process messages and fetch usernames
-    for (const message of forum.messages) {
-        const user = await User2.findById(message.user);
-        message.username = user?.username ?? null; // Assign username if found
-    }
-    
-    res.status(200).json(forum);
-});
 app.get('/home', (req, res) => {
     // Serve the home page
     res.sendFile(path.resolve('../pages/home.html'));
@@ -230,49 +215,56 @@ app.post('/alert', async (req, res) => {
 
 // Alert sending function
 const vonage = new Vonage({
-    apiKey: "35f6099b",
-    apiSecret: "pjFH2IATq1WFVXcl"
+    apiKey: process.env.VONAGE_API_KEY,
+    apiSecret: process.env.VONAGE_API_SECRET
   })
 
 
   const sendAlert = async (user) => {
     // Implement your alert sending logic here
     console.log(`Sending alert to ${user.address} for ${user.houseType}.`);
+    let lat, lon;
 
     const formattedAddress = encodeURIComponent(user.address);
-    const { lat, lng } = await fetch(`https://api.geoapify.com/v1/geocode/search?text=${formattedAddress}&key=8221bff488f1484783281c8a5618865f`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok ' + response.statusText);
-            }
-            return response.json();
-        })
-        .then(result => {
-            console.log(result,'Hiiii')
-            // if (!data.results || data.results.length === 0) {
-            //     throw new Error('No results found for the given address');
-            // }
-            // const lat = data.results[0].geometry.location.lat;
-            // const lng = data.results[0].geometry.location.lng;
-            // console.log(`Latitude: ${lat}, Longitude: ${lng}`);
-            // return { lat, lng };
-        })
-        .catch(error => {
-            console.error('There has been a problem with your fetch operation:', error);
-        });
-
-    const csv = await fetch(`https://api.meteomatics.com/${new Date().toISOString()}/weather_text_en:str/${lat},${lng}/csv`, {
-        headers: {
-            "authorization": "Basic aGFja3BzdV9wYW5kZXlfdGFuaXNoOjh3NnM3TkhCeTE=",
+    try{
+        console.log("Formatted address is:", formattedAddress);
+        const response = await fetch(`https://api.geoapify.com/v1/geocode/search?text=${formattedAddress}&apiKey=${process.env.GOOGLE_GEOCODE_API_KEY}`)
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
         }
-    })
-    .then(response => response.text());
+        const result = await response.json();
+        lon = result["features"][0]["geometry"]["coordinates"][0]
+        lat = result["features"][0]["geometry"]["coordinates"][1]
 
-    const description = csv.split("\n")[1].split(";")[1];
-    console.log(description);
+    } catch (error) {
+        console.error('There has been a problem with your fetch operation for geocode:', error);
+    }
+    
 
+    let description;
+    // Meteomatics 
+    const username = process.env.METEOMATICS_API_User;
+    const password = process.env.METEOMATICS_API_Password;
+    const credentials = `${username}:${password}`;
+    const encodedCredentials = btoa(credentials);
+    try {
+        const csv = await fetch(`https://api.meteomatics.com/${new Date().toISOString()}/weather_text_en:str/${lat},${lon}/csv`, {
+            headers: {
+                "authorization": `Basic ${encodedCredentials}`,
+            }
+        }).then(response => response.text());
+
+
+        description = csv.split("\n")[1].split(";")[1];
+        console.log("Weather Description:", description);
+    } catch (error) {
+        console.error('Error fetching weather data:', error);
+        return;
+    }
+    console.log('---------------------------------------------------------')
+    console.log('---------------------------------------------------------')
     // gemini integration
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    const genAI = new GoogleGenerativeAI(process.env.LLM_API_KEY);
     let generatedContent; // Declare generatedContent here
 
     async function run() {
@@ -288,11 +280,13 @@ const vonage = new Vonage({
             console.error("Error generating content:", error);
         }
     }
+    console.log('---------------------------------------------------------')
+    console.log('---------------------------------------------------------')
 
     await run(); // Wait for the run function to complete
 
-    const from = "17722470183";
-    const to = "18144411723";
+    const from = process.env.VONAGE_PHONE;
+    const to = process.env.USER_PHONE;
     const text = generatedContent; // Use generatedContent here
     async function sendSMS() {
         await vonage.sms.send({ to, from, text })

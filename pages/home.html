@@ -120,7 +120,7 @@
                         <li><a href="#disaster-types">Disaster Types</a></li>
                         <li><a href="#community-reports">Community Reports</a></li>
                         <li><a href="#tailored-alerts">Tailored Alerts</a></li>
-                        <li><a href="/forum">Community Forum</a></li>
+                        <li><a id="forumsLink" href="/forum">Community Forum</a></li>
                         <li><a href="/login">Login</a></li>
                     </ul>
                 </div>
@@ -153,8 +153,18 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Mobile menu toggle
             const nav = document.querySelector('nav');
+
+
+            // Forums
+            const urlParams = new URLSearchParams(window.location.search);
+            const userId = urlParams.get('userId');
+            if (userId) {
+                // Dynamically set the forums link to include the userId
+                document.getElementById('forumsLink').href = `/forum?userId=${userId}`;
+            } else {
+                console.log('User ID not found in the URL');
+            }
 
         
             // Load recent community reports from the forum

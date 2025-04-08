@@ -6,11 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Forum</title>
     <link rel="stylesheet" href="/pages/styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet">
 </head>
 <body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>DisasterAlert</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/home">Home</a></li>
+                    <li><a href="/forum" class="active">Community Forum</a></li>
+                    <li><a href="/alert">Tailored Alerts</a></li>
+                    <li><a href="/report">Report Incident</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
     <h1>Forums</h1>
     <div id="forum-container"></div>
 
@@ -19,6 +31,49 @@
         <input type="text" id="forum-title" placeholder="Forum Title">
         <button onclick="createForum()">Create Forum</button>
     </div>
+    <footer>
+        <div class="container">
+            <div class="footer-sections">
+                <div class="footer-section">
+                    <h3>DisasterAlert</h3>
+                    <p>Empowering communities with disaster prevention resources and emergency preparedness.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#disaster-types">Disaster Types</a></li>
+                        <li><a href="#community-reports">Community Reports</a></li>
+                        <li><a href="#tailored-alerts">Tailored Alerts</a></li>
+                        <li><a href="/forum">Community Forum</a></li>
+                        <li><a href="/login">Login</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Emergency Contacts</h3>
+                    <ul>
+                        <li>Emergency: 911</li>
+                        <li>Disaster Hotline: 1-800-XXX-XXXX</li>
+                        <li>Relief Services: 1-800-XXX-XXXX</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Connect With Us</h3>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon facebook"></a>
+                        <a href="#" class="social-icon twitter"></a>
+                        <a href="#" class="social-icon instagram"></a>
+                    </div>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Your email address">
+                        <button type="submit" class="btn btn-primary">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>DisasterAlert - Made By Tanish Pandey</p>
+            </div>
+        </div>
+    </footer>   
     
     <script>
         // Get userId from URL query parameters
